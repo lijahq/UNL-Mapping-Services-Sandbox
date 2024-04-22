@@ -174,13 +174,13 @@ var nebraskaCountiesReverse = {
 
 function selectOptionByText(selectElement, optionText) {
   console.log(optionText);
-  var searchText = optionText.toUpperCase(); // Convert text to lowercase for case-insensitive comparison
+  var searchText = optionText.toUpperCase(); // Convert text to uppercase for case-insensitive comparison
   for (var i = 0; i < selectElement.options.length; i++) {
     var optionInnerText = selectElement.options[i].innerText.toUpperCase();
     // console.log(optionInnerText);
     // console.log(searchText);
     if (optionInnerText === searchText) {
-      selectElement.options[i].selected = true;
+      selectElement.options[i].selected = !selectElement.options[i].selected; // Toggle the selected state
       break;
     }
   }
@@ -227,9 +227,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
   displayMap.events.click = function (obj, id, county) {
     console.log(obj);
     console.log(id);
-    selectOptionByText(selectList, trimSpaces(county));
+    if (
+      map.selectedCounties.counties.includes(id) ||
+      map.unselectedCounties.counties.includes(id)
+    ) {
+      selectOptionByText(selectList, trimSpaces(county));
 
-    map.update_county(id);
-    map.applyMapModel(displayMap);
+      map.update_county(id);
+      map.applyMapModel(displayMap);
+    }
   };
 });
